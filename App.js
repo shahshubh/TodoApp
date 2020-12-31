@@ -1,118 +1,37 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions, Modal } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from './Colors';
 import TodoList from './components/TodoList';
+import AddListModal from './components/AddListModal';
+import tempData from './tempData';
 
-const formatData = (data, numColumns) => {
-  const numberOfFullRows = Math.floor(data.length / numColumns);
+// const formatData = (data, numColumns) => {
+//   const numberOfFullRows = Math.floor(data.length / numColumns);
 
-  let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
-  while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-    data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
-    numberOfElementsLastRow++;
-  }
+//   let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+//   while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+//     data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+//     numberOfElementsLastRow++;
+//   }
 
-  return data;
-};
+//   return data;
+// };
 
 const numColumns = 2;
 export default function App() {
-  const tempData = [
-    {
-        name: "Plans abc Plans abc Plans abc ",
-        color: "#24a6d9",
-        todos: [
-            {
-                title: "ABc",
-                completed: false
-            },
-            {
-                title: "ABc",
-                completed: false
-            },
-            {
-                title: "Pack luggage",
-                completed: true
-            }
-        ]
-    },
-    {
-        name: "Go Gym",
-        color: "#8022d9",
-        todos: [
-            {
-                title: "ABc",
-                completed: false
-            },
-            {
-                title: "ABc",
-                completed: false
-            },
-            {
-                title: "Pack luggage",
-                completed: true
-            }
-        ]
-    },
-    {
-        name: "Plan Studies",
-        color: "#24a6d9",
-        todos: [
-            {
-                title: "ABc",
-                completed: false
-            },
-            {
-                title: "ABc",
-                completed: false
-            },
-            {
-                title: "Pack luggage",
-                completed: true
-            }
-        ]
-    },
-    {
-      name: "Plan Studies",
-      color: "#24a6d9",
-      todos: [
-          {
-              title: "ABc",
-              completed: false
-          },
-          {
-              title: "ABc",
-              completed: false
-          },
-          {
-              title: "Pack luggage",
-              completed: true
-          }
-      ]
-    },
-    {
-      name: "Plan Studies",
-      color: "#24a6d9",
-      todos: [
-          {
-              title: "ABc",
-              completed: false
-          },
-          {
-              title: "ABc",
-              completed: false
-          },
-          {
-              title: "Pack luggage",
-              completed: true
-          }
-      ]
-    },
-];
+
+  const [addTodoVisible, setAddTodoVisible] = useState(false);
+
+  const toggleAddTodoModal = () => {
+    setAddTodoVisible(!addTodoVisible);
+  }
 
   return (
     <View style={styles.container}>
+      <Modal animationType="slide" visible={addTodoVisible} onRequestClose={() => toggleAddTodoModal()} >
+        <AddListModal closeModal={() => toggleAddTodoModal()} />
+      </Modal>
       <View style={{ flexDirection: 'row', marginVertical: 40}}>
         <View style={styles.divider} ></View>
         <Text style={styles.title} >
@@ -130,7 +49,8 @@ export default function App() {
       </View> */}
       
         <FlatList 
-          data={formatData(tempData, numColumns)}
+          // data={formatData(tempData, numColumns)}
+          data={tempData}
           // style={styles.container}
           keyExtractor={item => item.name}
           numColumns={numColumns}
@@ -139,7 +59,7 @@ export default function App() {
           )}
         />
 
-      <TouchableOpacity style={styles.fixedView} >
+      <TouchableOpacity style={styles.fixedView} onPress={() => toggleAddTodoModal()} >
         <AntDesign name="plus" size={16} color={Colors.white} />
       </TouchableOpacity>
 
