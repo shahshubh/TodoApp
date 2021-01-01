@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
-import Colors from '../Colors';
+import { Colors } from '../constants/Colors';
 import ShowListModal from './ShowListModal';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 
-export default TodoList = ({list, updateList}) => {
+export default TodoList = ({ list, updateList }) => {
 
     const [showListVisible, setShowListVisible] = useState(false);
+
+    let date = new Date(list.createdAt);
 
     const toggleShowListModal = () => {
         setShowListVisible(prevState => !prevState);
@@ -17,35 +19,18 @@ export default TodoList = ({list, updateList}) => {
         return <View style={[styles.item, styles.itemInvisible]} />;
     }
     return (
-        <TouchableOpacity 
-            style={[styles.item, { backgroundColor: list.color }]}  
+        <TouchableOpacity
+            style={[styles.item, { backgroundColor: list.color }]}
             onPress={() => toggleShowListModal()}
         >
-            
             <Modal animationType="slide" visible={showListVisible} onRequestClose={() => toggleShowListModal()}>
                 <ShowListModal list={list} closeModal={() => toggleShowListModal()} updateList={updateList} />
             </Modal>
-
-            {/* <TouchableOpacity
-                // style={[styles.item, { backgroundColor: list.color }]}
-                onPress={() => toggleShowListModal()}
-            > */}
-                <Text style={styles.listTitle} numberOfLines={1} >{list.name}</Text>
-                <View style={{ position: 'absolute', left: 10, bottom: 15, flexDirection: 'row', }} >
-                    <Ionicons name="time" size={12} color={Colors.white} style={{ marginRight: 5, marginTop: 1.75 }} />
-                    <Text style={{ fontSize: 12, color: Colors.lightGray }} >20 December, 2020</Text>
-                </View>
-                {/* <View>
-                    <View style={{ alignItems: "center" }} >
-                        <Text style={styles.count}>{list.todos.filter(e => e.completed).length}</Text>
-                        <Text style={styles.subtitle}>Completed</Text>
-                    </View>
-                    <View style={{ alignItems: "center" }} >
-                        <Text style={styles.count}>{list.todos.filter(e => !e.completed).length}</Text>
-                        <Text style={styles.subtitle}>Remaining</Text>
-                    </View>
-                </View> */}
-            {/* </TouchableOpacity> */}
+            <Text style={styles.listTitle} numberOfLines={1} >{list.name}</Text>
+            <View style={{ position: 'absolute', left: 10, bottom: 15, flexDirection: 'row', }} >
+                <Ionicons name="time" size={12} color={Colors.white} style={{ marginRight: 5, marginTop: 1.75 }} />
+                <Text style={{ fontSize: 12, color: Colors.lightGray }} >{date.toDateString()}</Text>
+            </View>
         </TouchableOpacity>
     );
 }
@@ -56,7 +41,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flex: 1,
         margin: 2,
-        // height: Dimensions.get('window').width / numColumns,
         paddingVertical: 50,
         paddingHorizontal: 16,
         borderRadius: 8,

@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions, Modal, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View, 
+  TouchableOpacity, 
+  FlatList,
+  Modal, 
+  SafeAreaView, 
+  ActivityIndicator, 
+  LogBox
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import Colors from './Colors';
+import { Colors } from './constants/Colors';
 import TodoList from './components/TodoList';
 import AddListModal from './components/AddListModal';
-import tempData from './tempData';
 import { StatusBar } from 'expo-status-bar';
+
+import { getLists, createList, updateList } from './firebase/helpers';
 
 const formatData = (data, numColumns) => {
   const numberOfFullRows = Math.floor(data.length / numColumns);
@@ -15,73 +26,96 @@ const formatData = (data, numColumns) => {
     data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
     numberOfElementsLastRow++;
   }
-
   return data;
 };
 const numColumns = 2;
 
+LogBox.ignoreAllLogs();
+
 export default function App() {
 
   const [addTodoVisible, setAddTodoVisible] = useState(false);
-  const [lists, setLists] = useState(tempData);
+  const [lists, setLists] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useState(() => {
+    getLists(lists => {
+      setLists(lists);
+      setIsLoading(false);
+    })
+  }, []);
 
   const toggleAddTodoModal = () => {
     setAddTodoVisible(prevState => !prevState);
   }
 
   const renderList = (list) => {
-    return(
-      <TodoList list={list} updateList={updateList} />
+    return (
+      <TodoList list={list} updateList={updateListHandler} />
     );
   }
 
-  const addList = (list) => {
-    let updatedList = lists;
-    if(updatedList[updatedList.length - 1].empty){
-      updatedList.splice(updatedList.length - 1, 1);
-    }
-    updatedList = [...updatedList, {...list, todos: [], id: updatedList.length + 1 }];
-    setLists(updatedList);
+  const addListHandler = (list) => {
+    // let updatedList = lists;
+    // if(updatedList[updatedList.length - 1].empty){
+    //   updatedList.splice(updatedList.length - 1, 1);
+    // }
+    // updatedList = [...updatedList, {...list, todos: [], id: updatedList.length + 1 }];
+    // setLists(updatedList);
+    createList({
+      name: list.name,
+      color: list.color,
+      todos: [],
+      createdAt: Date.now()
+    });
   }
 
-  const updateList = (list) => {
-    let updatedList = lists;
-    updatedList = updatedList.map(l => l.id === list.id ? list : l);
+  const updateListHandler = (list) => {
+    // let updatedList = lists;
+    // updatedList = updatedList.map(l => l.id === list.id ? list : l);
+    // setLists(updatedList);
+    updateList(list);
+  }
 
-    setLists(updatedList);
+
+  if (isLoading) {
+    return (
+      <View style={{ ...styles.container, justifyContent: 'center', alignItems: 'center' }} >
+        <ActivityIndicator size={50} color={Colors.blue} />
+      </View>
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
       {/* <StatusBar style="auto" /> */}
       <Modal animationType="slide" visible={addTodoVisible} onRequestClose={() => toggleAddTodoModal()} >
-        <AddListModal closeModal={() => toggleAddTodoModal()} addList={addList} />
+        <AddListModal closeModal={() => toggleAddTodoModal()} addList={addListHandler} />
       </Modal>
-      <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 10, justifyContent: 'center'}}>
+      <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 10, justifyContent: 'center' }}>
         {/* <View style={styles.divider} ></View> */}
-        <Text style={styles.title} >
-          Todo <Text style={{ fontWeight: "300", color: Colors.blue }} >App </Text>
-        </Text>
+        <Text style={styles.title} >Todo App </Text>
         {/* <View style={styles.divider} ></View> */}
       </View>
 
-      {/* <View style={{ marginVertical: 48 }}>
-        <TouchableOpacity style={styles.addList} >
-          <AntDesign name="plus" size={16} color={Colors.blue} />
-        </TouchableOpacity>
+      {lists.length === 0 ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
+          <Text style={{ fontSize: 24, fontWeight: '700', }} >No Todo Lists</Text>
+          <Text style={{ fontSize: 18, }} >Start by creating some now !!</Text>
+        </View>
 
-        <Text style={styles.add}>Add List</Text>
-      </View> */}
-      
-        <FlatList 
+      ) : (
+        <FlatList
           data={formatData(lists, numColumns)}
-          // data={lists}
           // style={styles.container}
-          keyExtractor={item => item.name}
+          keyExtractor={item => item.id}
           numColumns={numColumns}
-          renderItem={({item}) => renderList(item)}
+          renderItem={({ item }) => renderList(item)}
           keyboardShouldPersistTaps="always"
         />
+      )}
+      
+      
 
       <TouchableOpacity style={styles.fixedView} onPress={() => toggleAddTodoModal()} >
         <AntDesign name="plus" size={16} color={Colors.white} />
@@ -95,8 +129,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   divider: {
     backgroundColor: Colors.lightBlue,
@@ -106,25 +138,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: '800',
-    color: Colors.black,
-    paddingHorizontal: 64
+    fontWeight: 'bold',
+    color: Colors.blue,
+    // paddingHorizontal: 64,
   },
-  // addList: {
-  //   borderColor: Colors.lightBlue,
-  //   borderWidth: 2,
-  //   borderRadius: 4,
-  //   padding: 16,
-  //   alignItems: 'center',
-  //   justifyContent: 'center'
-  // },
-  // add: {
-  //   color: Colors.blue,
-  //   fontWeight: '600',
-  //   fontSize: 14,
-  //   marginTop: 8
-  // },
-  fixedView : {
+
+  fixedView: {
     position: 'absolute',
     right: 30,
     bottom: 30,

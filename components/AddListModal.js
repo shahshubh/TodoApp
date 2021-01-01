@@ -1,44 +1,32 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { ColorPicker } from 'react-native-color-picker';
-import Colors from '../Colors';
-import tempData from '../tempData';
+import { Colors, backgroundColors } from '../constants/Colors';
+import SelectColors from './SelectColors';
 
 export default AddListModal = (props) => {
 
-    const backgroundColors = ["#000000","#2066ff","#df003c","#ff7420","#f926a3","#d92bf8","#22eab4","#08fb06","#7def6e","#444c8f","#5d3f6a","#93aced"];
     const [name, setName] = useState('');
     const [color, setColor] = useState(backgroundColors[0]);
+    const [showError, setShowError] = useState(false);
+
 
     const createTodo = () => {
-        const list = {name, color};
-        props.addList(list);
+        if(name != ''){
+            const list = {name, color};
+            props.addList(list);
 
-        setName('');
-        props.closeModal();
+            setName('');
+            props.closeModal();
+        } else {
+            setShowError(true);
+        }
+        
     }
 
-    const showColors = () => {
-        return(
-            backgroundColors.map(c => {
-                return(
-                    <TouchableOpacity 
-                        key={c} 
-                        style={{
-                            ...styles.colorSelect,
-                            backgroundColor: c,
-                            borderColor: color === c ? Colors.black : 'transparent',
-                            borderWidth: color === c ? 2 : 0,
-                            elevation: 3
-                        }} 
-                        onPress={() => setColor(c)} 
-                    />
-                );
-            })
-        );
+    const onColorSelectHandler = (selectedColor) => {
+        setColor(selectedColor);
     }
-
 
     return(
         <KeyboardAvoidingView style={styles.container} behavior="height" >
@@ -48,15 +36,25 @@ export default AddListModal = (props) => {
 
             <View style={{ alignSelf: "stretch", marginHorizontal: 32 }}>
                 <Text style={styles.title}>Create Todo List</Text>
-                <TextInput style={{...styles.input, borderColor: color}} placeholder="List name..." onChangeText={text => setName(text)} />
+                <TextInput 
+                    style={{...styles.input, borderColor: color}} 
+                    placeholder="List name..." 
+                    onChangeText={text => {
+                        setShowError(false);
+                        setName(text);
+                    }}
+                />
+                { showError && (
+                    <Text style={{ color: Colors.red, marginLeft: 10, marginTop: 5 }} >List name cannot be empty</Text>
+                )}
                 
-                    <ScrollView 
-                        horizontal={true} 
-                        contentContainerStyle={{ flexGrow: 1, flexDirection: 'row', marginTop: 25, paddingVertical: 5 }} 
-                        // showsHorizontalScrollIndicator={false}
-                    >
-                        {showColors()}
-                    </ScrollView>
+                <ScrollView 
+                    horizontal={true} 
+                    contentContainerStyle={{ flexGrow: 1, flexDirection: 'row', marginTop: 25, paddingVertical: 5 }} 
+                    // showsHorizontalScrollIndicator={false}
+                >
+                    <SelectColors color={color} onColorSelect={onColorSelectHandler} />
+                </ScrollView>
 
                 <TouchableOpacity style={{...styles.create, backgroundColor: color}} onPress={createTodo} >
                     <Text style={{ color: Colors.white, fontWeight: '600' }} >Create!</Text>
