@@ -1,43 +1,68 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions, Modal, SafeAreaView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from './Colors';
 import TodoList from './components/TodoList';
 import AddListModal from './components/AddListModal';
 import tempData from './tempData';
+import { StatusBar } from 'expo-status-bar';
 
-// const formatData = (data, numColumns) => {
-//   const numberOfFullRows = Math.floor(data.length / numColumns);
+const formatData = (data, numColumns) => {
+  const numberOfFullRows = Math.floor(data.length / numColumns);
 
-//   let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
-//   while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-//     data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
-//     numberOfElementsLastRow++;
-//   }
+  let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+  while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+    data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+    numberOfElementsLastRow++;
+  }
 
-//   return data;
-// };
-
+  return data;
+};
 const numColumns = 2;
+
 export default function App() {
 
   const [addTodoVisible, setAddTodoVisible] = useState(false);
+  const [lists, setLists] = useState(tempData);
 
   const toggleAddTodoModal = () => {
-    setAddTodoVisible(!addTodoVisible);
+    setAddTodoVisible(prevState => !prevState);
+  }
+
+  const renderList = (list) => {
+    return(
+      <TodoList list={list} updateList={updateList} />
+    );
+  }
+
+  const addList = (list) => {
+    let updatedList = lists;
+    if(updatedList[updatedList.length - 1].empty){
+      updatedList.splice(updatedList.length - 1, 1);
+    }
+    updatedList = [...updatedList, {...list, todos: [], id: updatedList.length + 1 }];
+    setLists(updatedList);
+  }
+
+  const updateList = (list) => {
+    let updatedList = lists;
+    updatedList = updatedList.map(l => l.id === list.id ? list : l);
+
+    setLists(updatedList);
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* <StatusBar style="auto" /> */}
       <Modal animationType="slide" visible={addTodoVisible} onRequestClose={() => toggleAddTodoModal()} >
-        <AddListModal closeModal={() => toggleAddTodoModal()} />
+        <AddListModal closeModal={() => toggleAddTodoModal()} addList={addList} />
       </Modal>
-      <View style={{ flexDirection: 'row', marginVertical: 40}}>
-        <View style={styles.divider} ></View>
+      <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 10, justifyContent: 'center'}}>
+        {/* <View style={styles.divider} ></View> */}
         <Text style={styles.title} >
-          Todo <Text style={{ fontWeight: "300", color: Colors.blue }} > App </Text>
+          Todo <Text style={{ fontWeight: "300", color: Colors.blue }} >App </Text>
         </Text>
-        <View style={styles.divider} ></View>
+        {/* <View style={styles.divider} ></View> */}
       </View>
 
       {/* <View style={{ marginVertical: 48 }}>
@@ -49,28 +74,27 @@ export default function App() {
       </View> */}
       
         <FlatList 
-          // data={formatData(tempData, numColumns)}
-          data={tempData}
+          data={formatData(lists, numColumns)}
+          // data={lists}
           // style={styles.container}
           keyExtractor={item => item.name}
           numColumns={numColumns}
-          renderItem={({item}) => (
-            <TodoList item={item} />
-          )}
+          renderItem={({item}) => renderList(item)}
+          keyboardShouldPersistTaps="always"
         />
 
       <TouchableOpacity style={styles.fixedView} onPress={() => toggleAddTodoModal()} >
         <AntDesign name="plus" size={16} color={Colors.white} />
       </TouchableOpacity>
 
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     // alignItems: 'center',
     // justifyContent: 'center',
   },

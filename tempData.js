@@ -1,32 +1,46 @@
 export default tempData = [
     {
-        name: "Plans abc to got o ",
-        color: "#24a6d9",
+        id: 1,
+        name: "Plans abc to got odfdsfd ",
+        color: "#000000",
         todos: [
             {
                 title: "ABc",
                 completed: false
             },
             {
-                title: "ABc",
+                title: "ABcsdsx",
                 completed: false
             },
             {
                 title: "Pack luggage",
                 completed: true
+            },
+            {
+                title: "Packsd luggage",
+                completed: true
+            },
+            {
+                title: "Packsdd luggage",
+                completed: true
+            },
+            {
+                title: "Pacdfdk luggage",
+                completed: true
             }
         ]
     },
     {
+        id: 2,
         name: "Go Gym",
-        color: "#8022d9",
+        color: "#2066ff",
         todos: [
             {
                 title: "ABc",
                 completed: false
             },
             {
-                title: "ABc",
+                title: "ABdxc",
                 completed: false
             },
             {
@@ -36,15 +50,16 @@ export default tempData = [
         ]
     },
     {
+        id: 3,
         name: "Plan Studies",
-        color: "#24a6d9",
+        color: "#df003c",
         todos: [
             {
                 title: "ABc",
                 completed: false
             },
             {
-                title: "ABc",
+                title: "dssABc",
                 completed: false
             },
             {
@@ -54,15 +69,16 @@ export default tempData = [
         ]
     },
     {
+        id: 4,
         name: "Plan Studies",
-        color: "#24a6d9",
+        color: "#ff7420",
         todos: [
             {
                 title: "ABc",
                 completed: false
             },
             {
-                title: "ABc",
+                title: "AssaBc",
                 completed: false
             },
             {
@@ -72,15 +88,16 @@ export default tempData = [
         ]
     },
     {
-        name: "Plan Studies",
-        color: "#24a6d9",
+        id: 5,
+        name: "Plan other Studies",
+        color: "#f926a3",
         todos: [
             {
                 title: "ABc",
                 completed: false
             },
             {
-                title: "ABc",
+                title: "AsdBc",
                 completed: false
             },
             {

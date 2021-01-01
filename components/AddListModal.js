@@ -7,16 +7,13 @@ import tempData from '../tempData';
 
 export default AddListModal = (props) => {
 
-    const backgroundColors = ["#1e3275","#2066ff","#df003c","#ff7420","#f926a3","#d92bf8","#22eab4","#08fb06","#7def6e","#444c8f","#5d3f6a","#93aced"];
+    const backgroundColors = ["#000000","#2066ff","#df003c","#ff7420","#f926a3","#d92bf8","#22eab4","#08fb06","#7def6e","#444c8f","#5d3f6a","#93aced"];
     const [name, setName] = useState('');
     const [color, setColor] = useState(backgroundColors[0]);
 
     const createTodo = () => {
-        tempData.push({
-            name,
-            color,
-            todos: []
-        });
+        const list = {name, color};
+        props.addList(list);
 
         setName('');
         props.closeModal();
@@ -28,7 +25,13 @@ export default AddListModal = (props) => {
                 return(
                     <TouchableOpacity 
                         key={c} 
-                        style={{...styles.colorSelect, backgroundColor: c }} 
+                        style={{
+                            ...styles.colorSelect,
+                            backgroundColor: c,
+                            borderColor: color === c ? Colors.black : 'transparent',
+                            borderWidth: color === c ? 2 : 0,
+                            elevation: 3
+                        }} 
                         onPress={() => setColor(c)} 
                     />
                 );
@@ -39,15 +42,19 @@ export default AddListModal = (props) => {
 
     return(
         <KeyboardAvoidingView style={styles.container} behavior="height" >
-            <TouchableOpacity style={{ position: 'absolute', top: 64, right: 32 }} onPress={props.closeModal} >
+            <TouchableOpacity style={{ position: 'absolute', top: 32, right: 32 }} onPress={props.closeModal} >
                 <AntDesign name="close" size={24} color={Colors.black} />
             </TouchableOpacity>
 
             <View style={{ alignSelf: "stretch", marginHorizontal: 32 }}>
                 <Text style={styles.title}>Create Todo List</Text>
-                <TextInput style={styles.input} placeholder="List Name" onChangeText={text => setName(text)} />
+                <TextInput style={{...styles.input, borderColor: color}} placeholder="List name..." onChangeText={text => setName(text)} />
                 
-                    <ScrollView horizontal={true} contentContainerStyle={{ flexGrow: 1, flexDirection: 'row', marginTop: 15 }} >
+                    <ScrollView 
+                        horizontal={true} 
+                        contentContainerStyle={{ flexGrow: 1, flexDirection: 'row', marginTop: 25, paddingVertical: 5 }} 
+                        // showsHorizontalScrollIndicator={false}
+                    >
                         {showColors()}
                     </ScrollView>
 
@@ -75,26 +82,26 @@ const styles = StyleSheet.create({
         marginBottom: 16
     },
     input: {
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: 0.5,
         borderColor: Colors.blue,
-        borderRadius: 6,
+        borderRadius: 25,
         height: 50,
         marginTop: 8,
         paddingHorizontal: 16,
         fontSize: 18,
-
     },
     create: {
         marginTop: 24,
         height: 50,
-        borderRadius: 6,
+        borderRadius: 25,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        elevation: 10
     },
     colorSelect: {
-        width: 30,
-        height: 30,
-        borderRadius: 4,
-        marginHorizontal: 5
+        width: 35,
+        height: 35,
+        borderRadius: 18,
+        marginHorizontal: 5,
     }
 });
