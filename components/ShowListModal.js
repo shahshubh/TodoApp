@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, Keyboard, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import { FlatList, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/Colors';
 import { deleteList } from '../firebase/helpers';
@@ -74,7 +74,7 @@ export default ShowListModal = ({ list, closeModal, updateList }) => {
                 <Text
                     style={{
                         ...styles.todo,
-                        color: todo.completed ? Colors.gray : Colors.black,
+                        color: todo.completed ? Colors.gray : Colors.white,
                         textDecorationLine: todo.completed ? 'line-through' : 'none',
                     }}
                 >
@@ -101,7 +101,7 @@ export default ShowListModal = ({ list, closeModal, updateList }) => {
         <KeyboardAvoidingView style={{ flex: 1 }} >
             <SafeAreaView style={styles.container} >
                 <TouchableOpacity style={{ position: 'absolute', top: 32, right: 32, zIndex: 10 }} onPress={closeModal} >
-                    <AntDesign name="close" size={24} color={Colors.black} />
+                    <AntDesign name="close" size={24} color={Colors.white} />
                 </TouchableOpacity>
 
                 <View style={{ ...styles.section, ...styles.header, borderBottomColor: list.color }} >
@@ -146,6 +146,7 @@ export default ShowListModal = ({ list, closeModal, updateList }) => {
                         onChangeText={text => setNewTodo(text)}
                         value={newTodo}
                         placeholder="New task..."
+                        placeholderTextColor={Colors.white}
                     />
                     <TouchableOpacity
                         style={{ ...styles.addTodo, backgroundColor: list.color }}
@@ -165,7 +166,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: Colors.darkBlue
     },
     section: {
         flex: 1,
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         fontWeight: '800',
-        color: Colors.black
+        color: Colors.white
     },
     taskCount: {
         marginTop: 4,
@@ -201,7 +203,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: 24,
         marginRight: 8,
-        paddingHorizontal: 14
+        paddingHorizontal: 14,
+        color: Colors.white
     },
     addTodo: {
         borderRadius: 24,
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     todo: {
-        color: Colors.black,
+        color: Colors.white,
         fontWeight: "700",
         fontSize: 16
     },

@@ -11,7 +11,7 @@ export default SelectColors = (props) => {
                     style={{
                         ...styles.colorSelect,
                         backgroundColor: c,
-                        borderColor: props.color === c ? Colors.black : 'transparent',
+                        borderColor: props.color === c ? Colors.white : 'transparent',
                         borderWidth: props.color === c ? 2 : 0,
                         elevation: 3
                     }}

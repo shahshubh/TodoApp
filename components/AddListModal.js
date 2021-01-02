@@ -31,7 +31,7 @@ export default AddListModal = (props) => {
     return(
         <KeyboardAvoidingView style={styles.container} behavior="height" >
             <TouchableOpacity style={{ position: 'absolute', top: 32, right: 32 }} onPress={props.closeModal} >
-                <AntDesign name="close" size={24} color={Colors.black} />
+                <AntDesign name="close" size={24} color={Colors.white} />
             </TouchableOpacity>
 
             <View style={{ alignSelf: "stretch", marginHorizontal: 32 }}>
@@ -39,6 +39,7 @@ export default AddListModal = (props) => {
                 <TextInput 
                     style={{...styles.input, borderColor: color}} 
                     placeholder="List name..." 
+                    placeholderTextColor={Colors.white}
                     onChangeText={text => {
                         setShowError(false);
                         setName(text);
@@ -70,23 +71,24 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: Colors.darkBlue
     },
     title: {
         fontSize: 28,
         fontWeight: '800',
-        color: Colors.black,
+        color: Colors.white,
         alignSelf: 'center',
         marginBottom: 16
     },
     input: {
         borderWidth: 0.5,
-        borderColor: Colors.blue,
         borderRadius: 25,
         height: 50,
         marginTop: 8,
         paddingHorizontal: 16,
-        fontSize: 18,
+        fontSize: 16,
+        color: Colors.white
     },
     create: {
         marginTop: 24,

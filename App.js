@@ -81,27 +81,26 @@ export default function App() {
   if (isLoading) {
     return (
       <View style={{ ...styles.container, justifyContent: 'center', alignItems: 'center' }} >
-        <ActivityIndicator size={50} color={Colors.blue} />
+        <ActivityIndicator size={50} color={Colors.white} />
       </View>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <StatusBar style="auto" /> */}
+      <StatusBar style="auto" />
       <Modal animationType="slide" visible={addTodoVisible} onRequestClose={() => toggleAddTodoModal()} >
         <AddListModal closeModal={() => toggleAddTodoModal()} addList={addListHandler} />
       </Modal>
-      <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 10, justifyContent: 'center' }}>
-        {/* <View style={styles.divider} ></View> */}
-        <Text style={styles.title} >Todo App </Text>
-        {/* <View style={styles.divider} ></View> */}
+      <View style={styles.header}>
+        <Text style={styles.title} >Todo </Text>
+        <Text style={{ fontSize: 30, color: Colors.lightBlue }} >Lists </Text>
       </View>
 
       {lists.length === 0 ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
-          <Text style={{ fontSize: 24, fontWeight: '700', }} >No Todo Lists</Text>
-          <Text style={{ fontSize: 18, }} >Start by creating some now !!</Text>
+          <Text style={{ fontSize: 24, fontWeight: '700', color: Colors.white }} >No Todo Lists</Text>
+          <Text style={{ fontSize: 18, color: Colors.white }} >Start by creating some now !!</Text>
         </View>
 
       ) : (
@@ -128,18 +127,21 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.darkBlue,
   },
-  divider: {
-    backgroundColor: Colors.lightBlue,
-    height: 1,
-    flex: 1,
-    alignSelf: 'center',
+  header: {
+    flexDirection: 'row', 
+    marginTop: 20, 
+    marginBottom: 10, 
+    paddingVertical: 10, 
+    justifyContent: 'center', 
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.lightBlue 
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: Colors.blue,
+    color: Colors.white,
     // paddingHorizontal: 64,
   },
 
@@ -149,7 +151,7 @@ const styles = StyleSheet.create({
     bottom: 30,
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.lightBlue,
     padding: 20,
     borderRadius: 50
   },
